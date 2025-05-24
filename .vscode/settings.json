@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/bf012732-68f9-493b-b27f-05de959f45f4/resourceGroups/appsvc_linux_australiaeast/providers/Microsoft.Web/sites/XeroMCP",
+    "appService.deploySubpath": "."
+}

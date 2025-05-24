@@ -1,0 +1,29 @@
+swagger: '2.0'
+
+info:
+  title: Xero MCP Server
+  description: >-
+    MCP Server for Xero accounting integration, providing access to contacts, invoices, accounts, and organization data via Model Context Protocol. This MCP Server will work with Streamable HTTP and is meant to work with Microsoft Copilot Studio.
+  version: 1.0.0
+
+host: xeromcp-gtebe8fef2dparbv.australiaeast-01.azurewebsites.net
+basePath: /mcp
+schemes:
+  - https
+consumes: []
+produces: []
+
+paths:
+  /:
+    post:
+      summary: MCP Server Streamable HTTP
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeServer
+      responses: {}
+
+definitions: {}
+parameters: {}
+responses: {}
+securityDefinitions: {}
+security: []
+tags: []

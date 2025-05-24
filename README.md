@@ -1,188 +1,184 @@
-# Xero MCP Server
+# Xero MCP Server for Microsoft 365 Copilot Studio
 
-This is a Model Context Protocol (MCP) server implementation for Xero. It provides a bridge between the MCP protocol and Xero's API, allowing for standardized access to Xero's accounting and business features.
+A streamlined **Model Context Protocol (MCP)** server that provides seamless integration between **Microsoft 365 Copilot Studio** and **Xero accounting APIs**. This server enables AI-powered financial workflows directly within your Microsoft 365 environment.
 
-## Features
+## 🎯 Overview
 
-- Xero OAuth2 authentication with custom connections
-- Contact management
-- Chart of Accounts management
-- Invoice creation and management
-- MCP protocol compliance
+This MCP server is specifically optimized for **Microsoft 365 Copilot Studio** and provides:
 
-## Prerequisites
+- ✅ **Complete Xero API Coverage** - All CRUD operations for accounts, contacts, invoices, and more
+- ✅ **M365 Copilot Studio Compliant** - StreamableHTTP transport with proper JSON-RPC 2.0 formatting
+- ✅ **Production Ready** - OAuth 2.0 authentication, rate limiting, CORS configuration
+- ✅ **Enhanced Logging** - Comprehensive request/response logging for debugging
+- ✅ **Type Safety** - Full TypeScript implementation with Zod schema validation
 
-- Node.js (v18 or higher)
-- npm or pnpm
-- A Xero developer account with API credentials
+## 🚀 Quick Start
 
-## Docs and Links
+### Prerequisites
 
-- [Xero Public API Documentation](https://developer.xero.com/documentation/api/)
-- [Xero API Explorer](https://api-explorer.xero.com/)
-- [Xero OpenAPI Specs](https://github.com/XeroAPI/Xero-OpenAPI)
-- [Xero-Node Public API SDK Docs](https://xeroapi.github.io/xero-node/accounting)
-- [Developer Documentation](https://developer.xero.com/)
-
-## Setup
-
-### Create a Xero Account
-
-If you don't already have a Xero account and organisation already, can create one by signing up [here](https://www.xero.com/au/signup/) using the free trial.
-
-We recommend using a Demo Company to start with because it comes with some pre-loaded sample data. Once you are logged in, switch to it by using the top left-hand dropdown and selecting "Demo Company". You can reset the data on a Demo Company, or change the country, at any time by using the top left-hand dropdown and navigating to [My Xero](https://my.xero.com).
-
-NOTE: To use Payroll-specific queries, the region should be either NZ or UK.
-
-### Authentication
-
-There are 2 modes of authentication supported in the Xero MCP server:
-
-#### 1. Custom Connections
-
-This is a better choice for testing and development which allows you to specify client id and secrets for a specific organisation.
-It is also the recommended approach if you are integrating this into 3rd party MCP clients such as Claude Desktop.
-
-##### Configuring your Xero Developer account
-
-Set up a Custom Connection following these instructions: https://developer.xero.com/documentation/guides/oauth2/custom-connections/
-
-Currently the following scopes are required for all sessions: [scopes](src/clients/xero-client.ts#L91-L92)
-
-##### Integrating the MCP server with Claude Desktop
-
-To add the MCP server to Claude go to Settings > Developer > Edit config and add the following to your claude_desktop_config.json file:
-
-```json
-{
-  "mcpServers": {
-    "xero": {
-      "command": "npx",
-      "args": ["-y", "@xeroapi/xero-mcp-server@latest"],
-      "env": {
-        "XERO_CLIENT_ID": "your_client_id_here",
-        "XERO_CLIENT_SECRET": "your_client_secret_here"
-      }
-    }
-  }
-}
-```
-
-NOTE: If you are using [Node Version Manager](https://github.com/nvm-sh/nvm) `"command": "npx"` section change it to be the full path to the executable, ie: `your_home_directory/.nvm/versions/node/v22.14.0/bin/npx` on Mac / Linux or `"your_home_directory\\.nvm\\versions\\node\\v22.14.0\\bin\\npx"` on Windows
-
-#### 2. Bearer Token
-
-This is a better choice if you are to support multiple Xero accounts at runtime and allow the MCP client to execute an auth flow (such as PKCE) as required.
-In this case, use the following configuration:
-
-```json
-{
-  "mcpServers": {
-    "xero": {
-      "command": "npx",
-      "args": ["-y", "@xeroapi/xero-mcp-server@latest"],
-      "env": {
-        "XERO_CLIENT_BEARER_TOKEN": "your_bearer_token"
-      }
-    }
-  }
-}
-```
-
-NOTE: The `XERO_CLIENT_BEARER_TOKEN` will take precedence over the `XERO_CLIENT_ID` if defined.
-
-### Available MCP Commands
-
-- `list-accounts`: Retrieve a list of accounts
-- `list-contacts`: Retrieve a list of contacts from Xero
-- `list-credit-notes`: Retrieve a list of credit notes
-- `list-invoices`: Retrieve a list of invoices
-- `list-items`: Retrieve a list of items
-- `list-organisation-details`: Retrieve details about an organisation
-- `list-profit-and-loss`: Retrieve a profit and loss report
-- `list-quotes`: Retrieve a list of quotes
-- `list-tax-rates`: Retrieve a list of tax rates
-- `list-payments`: Retrieve a list of payments
-- `list-trial-balance`: Retrieve a trial balance report
-- `list-profit-and-loss`: Retrieve a profit and loss report
-- `list-bank-transactions`: Retrieve a list of bank account transactions
-- `list-payroll-employees`: Retrieve a list of Payroll Employees
-- `list-report-balance-sheet`: Retrieve a balance sheet report
-- `list-payroll-employee-leave`: Retrieve a Payroll Employee's leave records
-- `list-payroll-employee-leave-balances`: Retrieve a Payroll Employee's leave balances
-- `list-payroll-employee-leave-types`: Retrieve a list of Payroll leave types
-- `list-payroll-leave-periods`: Retrieve a list of a Payroll Employee's leave periods
-- `list-payroll-leave-types`: Retrieve a list of all avaliable leave types in Xero Payroll
-- `list-aged-receivables-by-contact`: Retrieves aged receivables for a contact
-- `list-aged-payables-by-contact`: Retrieves aged payables for a contact
-- `list-contact-groups`: Retrieve a list of contact groups
-- `create-contact`: Create a new contact
-- `create-credit-note`: Create a new credit note
-- `create-invoice`: Create a new invoice
-- `create-payment`: Create a new payment
-- `create-quote`: Create a new quote
-- `create-credit-note`: Create a new credit note
-- `create-payroll-timesheet`: Create a new Payroll Timesheet
-- `update-contact`: Update an existing contact
-- `update-invoice`: Update an existing draft invoice
-- `update-quote`: Update an existing draft quote
-- `update-credit-note`: Update an existing draft credit note
-- `update-payroll-timesheet-line`: Update a line on an existing Payroll Timesheet
-- `approve-payroll-timesheet`: Approve a Payroll Timesheet
-- `revert-payroll-timesheet`: Revert an approved Payroll Timesheet
-- `add-payroll-timesheet-line`: Add new line on an existing Payroll Timesheet
-- `delete-payroll-timesheet`: Delete an existing Payroll Timesheet
-- `get-payroll-timesheet`: Retrieve an existing Payroll Timesheet
-
-For detailed API documentation, please refer to the [MCP Protocol Specification](https://modelcontextprotocol.io/).
-
-## For Developers
+- Node.js 18+ 
+- Xero Developer App ([Create one here](https://developer.xero.com/app/manage))
+- Microsoft 365 Copilot Studio access
 
 ### Installation
 
 ```bash
-# Using npm
+git clone https://github.com/XeroAPI/xero-mcp-server.git
+cd xero-mcp-server
 npm install
-
-# Using pnpm
-pnpm install
 ```
 
-### Run a build
+### Configuration
+
+1. Copy the environment template:
+```bash
+cp .env.template .env
+```
+
+2. Configure your Xero OAuth credentials in `.env`:
+```env
+XERO_CLIENT_ID=your_xero_client_id
+XERO_CLIENT_SECRET=your_xero_client_secret
+XERO_REDIRECT_URI=http://localhost:3000/callback
+PORT=3000
+```
+
+### Starting the Server
 
 ```bash
-# Using npm
+# Build and start
 npm run build
+npm start
 
-# Using pnpm
-pnpm build
+# Development mode
+npm run dev
 ```
 
-### Integrating with Claude Desktop
+The server will start on `http://localhost:3000` with the MCP endpoint at `/mcp/`.
 
-To link your Xero MCP server in development to Claude Desktop go to Settings > Developer > Edit config and add the following to your `claude_desktop_config.json` file:
+## 🔗 Microsoft 365 Copilot Studio Integration
 
-NOTE: For Windows ensure the `args` path escapes the `\` between folders ie. `"C:\\projects\xero-mcp-server\\dist\\index.js"`
+### MCP Endpoint Configuration
 
-```json
-{
-  "mcpServers": {
-    "xero": {
-      "command": "node",
-      "args": ["insert-your-file-path-here/xero-mcp-server/dist/index.js"],
-      "env": {
-        "XERO_CLIENT_ID": "your_client_id_here",
-        "XERO_CLIENT_SECRET": "your_client_secret_here"
-      }
-    }
-  }
-}
+In Microsoft 365 Copilot Studio, configure your MCP connection:
+
+- **Endpoint URL**: `http://localhost:3000/mcp/`
+- **Method**: POST
+- **Transport**: StreamableHTTP
+- **Protocol**: JSON-RPC 2.0
+
+### Available Tools
+
+The server provides comprehensive Xero API coverage through these tool categories:
+
+- **📋 List Tools**: `list-accounts`, `list-contacts`, `list-invoices`, etc.
+- **🔍 Get Tools**: `get-account`, `get-contact`, `get-invoice`, etc.  
+- **➕ Create Tools**: `create-contact`, `create-invoice`, `create-payment`, etc.
+- **✏️ Update Tools**: `update-contact`, `update-invoice`, etc.
+- **🗑️ Delete Tools**: `delete-contact`, `delete-invoice`, etc.
+
+### Example Usage in Copilot Studio
+
+```
+User: "Show me all unpaid invoices from this month"
+Copilot: Uses list-invoices tool with date and status filters
+
+User: "Create a new contact for Acme Corp"  
+Copilot: Uses create-contact tool with provided details
+
+User: "What's the balance on account 200?"
+Copilot: Uses get-account tool to retrieve account details
 ```
 
-## License
+## 🛠️ Development
 
-MIT
+### Project Structure
 
-## Security
+```
+xero-mcp-server/
+├── src/
+│   ├── index.ts              # Main entry point
+│   ├── server/
+│   │   └── xero-m365-server.ts   # M365 Copilot Studio server
+│   ├── tools/                # Tool implementations
+│   │   ├── create/           # Create operations
+│   │   ├── delete/           # Delete operations  
+│   │   ├── get/             # Get operations
+│   │   ├── list/            # List operations
+│   │   └── update/          # Update operations
+│   └── types/               # TypeScript type definitions
+├── M365-DEPLOYMENT-GUIDE.md    # Detailed M365 setup guide
+└── README-M365-COPILOT.md     # M365 specific documentation
+```
 
-Please do not commit your `.env` file or any sensitive credentials to version control (it is included in `.gitignore` as a safe default.)
+### Building
+
+```bash
+npm run build
+```
+
+### Linting
+
+```bash
+npm run lint
+npm run lint:fix
+```
+
+## 📊 Monitoring & Debugging
+
+### Health Check
+
+```bash
+curl http://localhost:3000/health
+```
+
+### Server Information
+
+```bash
+curl http://localhost:3000/
+```
+
+### Enhanced Logging
+
+The server provides detailed logging for all MCP requests and responses, including:
+- Request method and parameters
+- Response data and status codes
+- Error details with stack traces
+- Performance metrics
+
+## 🔐 Security Features
+
+- **OAuth 2.0** - Secure Xero API authentication
+- **Rate Limiting** - 100 requests per minute per client
+- **CORS Protection** - Configured for Microsoft domains
+- **Input Validation** - Zod schema validation for all inputs
+- **Error Handling** - Comprehensive error responses
+
+## 📚 Documentation
+
+- [M365 Deployment Guide](./M365-DEPLOYMENT-GUIDE.md) - Step-by-step setup
+- [M365 Copilot README](./README-M365-COPILOT.md) - Detailed M365 integration
+- [TypeScript SDK Guide](./typescriptsdk.md) - Development reference
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - see [LICENSE](./LICENSE) file for details.
+
+## 🆘 Support
+
+For issues and questions:
+- Create an issue on GitHub
+- Check the M365 Deployment Guide for common problems
+- Review the enhanced logging output for debugging
+
+---
+
+**Optimized for Microsoft 365 Copilot Studio** 🚀

@@ -1,21 +1,13 @@
 #!/usr/bin/env node
 
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { XeroMcpServer } from "./server/xero-mcp-server.js";
-import { ToolFactory } from "./tools/tool-factory.js";
+import { startXeroMcpServer } from "./server/xero-m365-server.js";
 
 const main = async () => {
-  // Create an MCP server
-  const server = XeroMcpServer.GetServer();
-
-  ToolFactory(server);
-
-  // Start receiving messages on stdin and sending messages on stdout
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
+  console.log(`🚀 Starting Xero MCP Server with comprehensive logging...`);
+  await startXeroMcpServer();
 };
 
 main().catch((error) => {
-  console.error("Error:", error);
+  console.error("❌ Error starting Xero MCP Server:", error);
   process.exit(1);
 });
