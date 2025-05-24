@@ -127,7 +127,11 @@ Common Operations:
 - Create invoice: { "operation": "create-invoice", "contactID": "id", "description": "Service", "unitAmount": 100 }
 - List accounts: { "operation": "list-accounts" } (to find valid account codes)
 
-For invoices: The tool will automatically transform your simple parameters into the correct format.`,
+INVOICE CREATION RULES:
+1. Always verify the contact exists by checking list-contacts first
+2. If the contact name doesn't match EXACTLY, create a new contact
+3. Never substitute one contact for another based on similarity
+4. The tool will automatically transform your simple parameters into the correct format.`,
   {
     operation: XeroOperation.describe("The Xero operation to perform"),
     
@@ -140,19 +144,12 @@ For invoices: The tool will automatically transform your simple parameters into 
     quantity: z.number().optional().describe("Quantity for line items. OPTIONAL for create-invoice (defaults to 1 if not specified)"),
     unitAmount: z.number().optional().describe("Price per unit. REQUIRED for: create-invoice (price of item/service), create-item (selling price)"),
     accountCode: z.string().optional().describe("Account code from chart of accounts. OPTIONAL for create-invoice (defaults to '200' for sales). Use '200' if unsure"),
-    taxType: z.string().optional().describe("Tax type. OPTIONAL - defaults to 'OUTPUT2' (standard tax) if not specified. Options: 'OUTPUT2', 'NONE', 'INPUT2'"),
+    taxType: z.string().optional().describe("Tax type. OPTIONAL - defaults to 'OUTPUT' (standard tax) if not specified. Options: 'OUTPUT', 'NONE', 'INPUT'"),
     dueDate: z.string().optional().describe("Due date in YYYY-MM-DD format. OPTIONAL for create-invoice (defaults to 30 days from today)"),
     reference: z.string().optional().describe("Reference number or text. OPTIONAL for invoices, quotes, etc."),
     page: z.number().optional().describe("Page number for list operations. OPTIONAL - defaults to 1"),
     
-    // Additional common parameters
-    includeArchived: z.boolean().optional().describe("Include archived records"),
-    status: z.string().optional().describe("Filter by status"),
-    timesheetID: z.string().optional().describe("Timesheet ID for payroll operations"),
-    invoiceID: z.string().optional().describe("Invoice ID for updates"),
-    quoteID: z.string().optional().describe("Quote ID for operations"),
-    itemID: z.string().optional().describe("Item ID for updates"),
-    paymentID: z.string().optional().describe("Payment ID for operations"),
+        // Additional common parameters    includeArchived: z.boolean().optional().describe("Include archived records"),    status: z.string().optional().describe("Filter by status"),    timesheetID: z.string().optional().describe("Timesheet ID for payroll operations"),    invoiceID: z.string().optional().describe("Invoice ID for updates"),    quoteID: z.string().optional().describe("Quote ID for operations"),    itemID: z.string().optional().describe("Item ID for updates"),    paymentID: z.string().optional().describe("Payment ID for operations"),        // Contact validation parameter for invoice creation    expectedContactName: z.string().optional().describe("For invoice creation: the expected contact name to validate against. If provided, the tool will verify the contact name matches before creating the invoice."),
   },
   async (args) => {
     try {
@@ -213,7 +210,7 @@ For invoices: The tool will automatically transform your simple parameters into 
           quantity: (quantity as number) || 1,
           unitAmount: unitAmount as number,
           accountCode: (accountCode as string) || '200', // Default sales account
-          taxType: (taxType as string) || 'OUTPUT2' // Default tax type
+          taxType: (taxType as string) || 'OUTPUT' // Default tax type
         };
         
         // Reconstruct args in the format create-invoice expects
