@@ -1,0 +1,150 @@
+# Azure App Service Deployment Ignore
+# This file excludes unnecessary files from deployment package to speed up deployment
+
+# Test files and directories
+tests/
+__tests__/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+test/
+coverage/
+.nyc_output/
+
+# Source TypeScript files (deploy compiled JS only)
+src/
+tsconfig.json
+tsconfig.*.json
+
+# Development dependencies and tools
+jest.config.*
+eslint.config.js
+.eslintrc.*
+.prettierrc*
+.editorconfig
+
+# Documentation and examples
+README*.md
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+*.md
+docs/
+examples/
+.github/
+
+# Development configuration
+.env.example
+.env.template
+.env.development*
+.env.test*
+.env.local
+
+# Debug and development files
+debug-*.js
+*-debug.js
+DEBUG-*.md
+ISSUE-*.md
+*.debug.log
+
+# Build tools and configuration
+webpack.config.*
+rollup.config.*
+vite.config.*
+babel.config.*
+.babelrc*
+
+# IDE and editor files
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+
+# NPM/Yarn files
+.npmignore
+.npmrc
+.yarnrc
+yarn.lock
+package-lock.json
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Development scripts
+scripts/
+tools/
+build/
+.circleci/
+.travis.yml
+.github/
+azure-pipelines.yml
+
+# Response files and test data
+*response*.json
+*response*.txt
+*_response.*
+test_*.json
+actual_response.*
+contacts_mcp_response.txt
+full_tools_response.txt
+tool_execution_response.txt
+tools_list_response.txt
+accounts_response.json
+
+# Development shell scripts
+*.sh
+start-server.sh
+run-tests.sh
+
+# Check and verification scripts
+check-*.js
+verify-*.js
+restore-*.js
+
+# Development guides and deployment docs
+*-DEPLOYMENT-GUIDE.md
+*-INSTRUCTIONS.md
+typescriptsdk.md
+llms.md
+glama.json
+
+# Deployment files
+.deployment
+deploy.cmd
+
+# Keep only production essentials:
+# - dist/ (compiled JavaScript)
+# - package.json (for dependencies)
+# - .env (production environment)
+# - node_modules/ (if using ZIP deployment without build step) 

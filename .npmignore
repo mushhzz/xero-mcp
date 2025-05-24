@@ -10,3 +10,7 @@ docs_theme
 *.config.js
 start-server.sh
 tsconfig.json
+tsconfig.test.json
+tests/
+jest.config.*
+coverage/

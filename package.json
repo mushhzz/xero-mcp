@@ -1,7 +1,7 @@
 {
   "name": "@xeroapi/xero-mcp-server",
   "version": "0.0.12",
-  "description": "MCP server implementation for Xero integration",
+  "description": "Xero MCP Server optimized for Microsoft 365 Copilot Studio",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
@@ -10,41 +10,87 @@
   },
   "author": "Xero (https://xero.com)",
   "type": "module",
-  "bin": "./dist/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc && shx chmod +x dist/*.js",
-    "prepare": "npm run build",
+    "build": "tsc",
+    "build:prod": "tsc --project tsconfig.json",
+    "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
-    "dev": "tsx src/index.ts",
-    "watch": "tsc --watch",
-    "lint:fix": "eslint --fix",
-    "lint": "eslint ."
+    "start:m365": "tsx src/index.ts",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit"
   },
+  "keywords": [
+    "xero",
+    "mcp",
+    "copilot",
+    "microsoft-365"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
     "@types/express": "^5.0.2",
+    "@types/cors": "^2.8.18",
+    "@types/node": "^22.13.10",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "openid-client": "^6.3.4",
     "xero-node": "^10.0.0",
     "zod": "^3.24.2",
-    "zod-to-json-schema": "^3.24.5"
+    "zod-to-json-schema": "^3.24.5",
+    "shx": "^0.3.4",
+    "typescript": "^5.8.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@types/cors": "^2.8.18",
-    "@types/node": "^22.13.10",
+    "@types/jest": "^29.5.8",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
     "globals": "^16.0.0",
+    "jest": "^29.7.0",
     "prettier": "3.5.3",
-    "shx": "^0.3.4",
+    "ts-jest": "^29.1.1",
     "tsx": "^4.16.2",
-    "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/default",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.ts"
+    ],
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.d.ts",
+      "!src/index.ts"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testTimeout": 60000,
+    "maxWorkers": 1,
+    "detectOpenHandles": true,
+    "forceExit": true,
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.test.json"
+        }
+      ]
+    }
   }
 }
